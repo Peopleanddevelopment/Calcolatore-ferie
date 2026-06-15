@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Strumento Piano Ferie · Store Manager · iPad UX</title>
+  <style>
+    :root{
+      --bg:#f4f7f4;
+      --panel:#ffffff;
+      --panel-2:#eef8f1;
+      --green:#128c7e;
+      --green-dark:#075e54;
+      --green-soft:#dcf8c6;
+      --mint:#e7f6ed;
+      --text:#18332f;
+      --muted:#60736e;
+      --border:#d7e3df;
+      --danger:#c0392b;
+      --danger-bg:#fff1ee;
+      --warn:#a66b00;
+      --warn-bg:#fff7df;
+      --ok:#137333;
+      --ok-bg:#edf8ef;
+      --info:#1d4ed8;
+      --info-bg:#eff6ff;
+      --shadow:0 18px 50px rgba(15, 46, 40, .12);
+      --radius:22px;
+      --radius-small:14px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(18,140,126,.12), transparent 30%),
+        linear-gradient(135deg, #eef6f1 0%, #f9fbf9 55%, #eef4f3 100%);
+      min-height:100vh;
+    }
+    .app{
+      width:min(1440px, calc(100% - 28px));
+      margin:18px auto 42px;
+    }
+    header.hero{
+      background:linear-gradient(135deg, var(--green-dark), var(--green));
+      color:#fff;
+      border-radius:28px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    header.hero:before{
+      content:"";
+      position:absolute;
+      inset:auto -120px -170px auto;
+      width:380px;
+      height:380px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
+    }
+    .topline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      opacity:.95;
+      letter-spacing:.2px;
+      margin-bottom:8px;
+    }
+    .wa-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:var(--green-soft);
+      box-shadow:0 0 0 7px rgba(220,248,198,.16);
+    }
+    h1{
+      margin:0;
+      font-size:clamp(30px, 4vw, 54px);
+      line-height:1.02;
+      max-width:880px;
+    }
+    .hero p{
+      margin:16px 0 0;
+      max-width:900px;
+      font-size:18px;
+      line-height:1.5;
+      opacity:.94;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+      position:relative;
+      z-index:1;
+    }
+    button, .btn{
+      border:0;
+      border-radius:999px;
+      padding:12px 18px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      font-family:var(--font);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+    }
+    button:hover, .btn:hover{transform:translateY(-1px)}
+    button:active, .btn:active{transform:translateY(0)}
+    .btn-primary{
+      background:#fff;
+      color:var(--green-dark);
+      box-shadow:0 10px 24px rgba(0,0,0,.14);
+    }
+    .btn-green{
+      background:var(--green);
+      color:#fff;
+      box-shadow:0 10px 22px rgba(18,140,126,.18);
+    }
+    .btn-ghost{
+      background:rgba(255,255,255,.16);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.28);
+    }
+    .btn-soft{
+      background:var(--mint);
+      color:var(--green-dark);
+      border:1px solid var(--border);
+    }
+    .btn-danger{
+      background:var(--danger-bg);
+      color:var(--danger);
+      border:1px solid #ffd1c9;
+    }
+    .btn-mini{
+      padding:8px 11px;
+      font-size:12px;
+      border-radius:12px;
+      box-shadow:none;
+    }
+    .first-step{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      align-items:center;
+      background:#fff;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      padding:18px;
+      margin:18px 0;
+    }
+    .first-step strong{
+      display:block;
+      font-size:18px;
+      margin-bottom:4px;
+    }
+    .first-step span{color:var(--muted); line-height:1.45}
+    .req{
+      color:var(--danger);
+      font-weight:900;
+      margin-left:2px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap:18px;
+      align-items:start;
+    }
+    .sidebar{
+      position:sticky;
+      top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .card{
+      background:rgba(255,255,255,.93);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .card h2, .card h3{
+      margin:0 0 12px;
+      line-height:1.2;
+    }
+    .card h2{font-size:24px}
+    .card h3{font-size:18px}
+    .small{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+    .steps{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:10px;
+    }
+    .steps a{
+      display:grid;
+      grid-template-columns:36px 1fr;
+      gap:10px;
+      align-items:center;
+      padding:10px;
+      border-radius:16px;
+      color:var(--text);
+      text-decoration:none;
+      background:#fff;
+      border:1px solid var(--border);
+    }
+    .steps a:hover{background:var(--panel-2)}
+    .step-num{
+      width:36px;
+      height:36px;
+      min-width:36px;
+      border-radius:50%;
+      background:var(--green);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:950;
+      font-size:15px;
+      line-height:1;
+      margin:0;
+      padding:0;
+      text-align:center;
+      font-variant-numeric:tabular-nums;
+    }
+    .steps b{display:block; font-size:14px; color:var(--text)}
+    .steps a > span:not(.step-num){display:block; min-width:0}
+    .steps a > span:not(.step-num) > span{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+    .content{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(220px, 1fr));
+      gap:14px;
+      align-items:stretch;
+      grid-auto-rows:1fr;
+    }
+    label.field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:104px;
+      padding:13px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:linear-gradient(180deg, #ffffff, #f8fcfa);
+      height:100%;
+      justify-content:space-between;
+    }
+    label.field > span{
+      display:block;
+      font-weight:900;
+      margin-bottom:0;
+      font-size:13px;
+      min-height:18px;
+      line-height:1.25;
+    }
+    label.field input, label.field select, label.field textarea{
+      margin-top:auto;
+    }
+    input, select, textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:11px 12px;
+      font-size:15px;
+      font-family:var(--font);
+      color:#0f172a;
+      font-weight:650;
+      background:#fff;
+      outline:none;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(18,140,126,.13);
+    }
+    input[type="number"], .cell-input, .num-result, .kpi .value, .metric b{
+      color:#061f1a !important;
+      font-weight:900;
+      font-variant-numeric:tabular-nums;
+    }
+    input[type="number"], .cell-input{
+      background:#fff;
+      border-color:#b8cbc5;
+    }
+    input::placeholder{color:#8ba29c; font-weight:500}
+    input[readonly]{
+      background:#f2faf6;
+      color:#10241f;
+      opacity:1;
+      border-color:#c8ddd5;
+      font-weight:850;
+      cursor:not-allowed;
+    }
+    input:disabled, select:disabled{
+      color:#10241f;
+      -webkit-text-fill-color:#10241f;
+      opacity:1;
+      background:#f2faf6;
+      font-weight:850;
+    }
+    textarea{min-height:86px; resize:vertical}
+    .toggle-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      background:var(--panel-2);
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      margin-top:12px;
+    }
+    .toggle-row input{
+      width:auto;
+      margin-top:3px;
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:12px;
+    }
+    .kpi{
+      background:linear-gradient(180deg, #ffffff, #f7fbf8);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+    }
+    .kpi .label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .kpi .value{
+      font-size:clamp(24px, 2.3vw, 34px);
+      line-height:1.1;
+      font-weight:950;
+      margin-top:6px;
+      letter-spacing:-.02em;
+      font-variant-numeric:tabular-nums;
+      overflow-wrap:anywhere;
+    }
+    .kpi .hint{font-size:12px; color:var(--muted); margin-top:4px}
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:#fff;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      min-width:1180px;
+      font-size:13.5px;
+      font-variant-numeric:tabular-nums;
+    }
+    table.monthly-data{min-width:1720px}
+    table.team-data{min-width:1120px}
+    th, td{
+      border-bottom:1px solid var(--border);
+      padding:11px 12px;
+      text-align:left;
+      vertical-align:middle;
+    }
+    tbody tr:nth-child(even) td{background:#fbfdfc}
+    tbody tr:hover td{background:#f3faf6}
+    th{
+      position:sticky;
+      top:0;
+      background:#f0faf3;
+      color:#113c35;
+      z-index:1;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.035em;
+    }
+    tr:last-child td{border-bottom:0}
+    td.num, th.num{text-align:right; white-space:nowrap}
+    .cell-input{
+      min-width:118px;
+      padding:10px 11px;
+      border-radius:12px;
+      font-size:14.5px;
+      font-weight:750;
+    }
+    .cell-input.short{
+      min-width:112px;
+      width:112px;
+      max-width:128px;
+      text-align:right;
+    }
+    td.num .cell-input{ text-align:right; }
+    td.sticky-col .cell-input{ min-width:190px; }
+    select.cell-input{ min-width:132px; }
+    .sticky-col{
+      position:sticky;
+      left:0;
+      background:#fff;
+      z-index:2;
+      box-shadow:8px 0 12px rgba(0,0,0,.03);
+    }
+    th.sticky-col{
+      background:#f0faf3;
+      z-index:3;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .pill.ok{background:var(--ok-bg); color:var(--ok)}
+    .pill.warn{background:var(--warn-bg); color:var(--warn)}
+    .pill.danger{background:var(--danger-bg); color:var(--danger)}
+    .pill.info{background:var(--info-bg); color:var(--info)}
+    .two-col{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) minmax(320px, .55fr);
+      gap:16px;
+      align-items:start;
+    }
+    .month-tools{
+      display:grid;
+      grid-template-columns: 1.2fr repeat(3, auto);
+      gap:10px;
+      align-items:end;
+      margin-bottom:12px;
+    }
+    .scenario{
+      background:linear-gradient(180deg, #f7fffa, #fff);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:14px;
+    }
+    .scenario-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .metric{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+    }
+    .metric span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+    }
+    .metric b{
+      display:block;
+      font-size:22px;
+      margin-top:4px;
+      font-variant-numeric:tabular-nums;
+      color:#10241f;
+    }
+    .notice{
+      border-radius:18px;
+      padding:12px 14px;
+      border:1px solid var(--border);
+      line-height:1.45;
+      margin-top:12px;
+      font-size:14px;
+    }
+    .notice.ok{background:var(--ok-bg); border-color:#c9ecd1}
+    .notice.warn{background:var(--warn-bg); border-color:#ffe2a7}
+    .notice.danger{background:var(--danger-bg); border-color:#ffc7be}
+    .notice.info{background:var(--info-bg); border-color:#cbdcff}
+    .chart{
+      display:grid;
+      gap:8px;
+      margin-top:8px;
+    }
+    .bar-row{
+      display:grid;
+      grid-template-columns:104px minmax(0, 1fr) 112px;
+      gap:12px;
+      align-items:center;
+      font-size:13px;
+      font-variant-numeric:tabular-nums;
+    }
+    .bar-track{
+      height:18px;
+      background:#eef3f1;
+      border-radius:999px;
+      position:relative;
+      overflow:hidden;
+    }
+    .bar-track:after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      bottom:0;
+      border-left:1px dashed rgba(0,0,0,.22);
+    }
+    .bar{
+      position:absolute;
+      top:3px;
+      height:12px;
+      border-radius:999px;
+    }
+    .bar.pos{background:var(--green)}
+    .bar.neg{background:var(--danger)}
+    .glossary{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    details{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:11px 13px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:900;
+    }
+    details p{
+      margin:8px 0 0;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:13px;
+    }
+    .footer-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+    .toast{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      background:#173a34;
+      color:#fff;
+      padding:13px 16px;
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      opacity:0;
+      transform:translateY(12px);
+      pointer-events:none;
+      transition:opacity .2s ease, transform .2s ease;
+      z-index:50;
+      font-weight:800;
+      max-width:min(420px, calc(100vw - 36px));
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+    .help-chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#e2f4ed;
+      color:var(--green-dark);
+      font-size:12px;
+      font-weight:900;
+      margin-left:4px;
+      cursor:help;
+    }
+    .muted-line{
+      border-top:1px solid var(--border);
+      margin:14px 0;
+    }
+    .file-input{
+      display:none;
+    }
+    .nowrap{white-space:nowrap}
+    .num-result{
+      display:inline-block;
+      min-width:82px;
+      color:#10241f;
+      font-weight:900;
+      font-variant-numeric:tabular-nums;
+    }
+    .required-legend{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin:0 0 14px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:#fff7f5;
+      border:1px solid #ffd1c9;
+      color:#7a2018;
+      font-weight:800;
+    }
+    .danger-text{color:var(--danger); font-weight:900}
+    .ok-text{color:var(--ok); font-weight:900}
+    .warn-text{color:var(--warn); font-weight:900}
+    body.hr-preview button{display:none!important}
+    body.hr-preview .footer-actions{display:none!important}
+    @media (max-width: 1120px){
+      .grid{grid-template-columns:1fr}
+      .sidebar{position:relative; top:0}
+      .form-grid{grid-template-columns:repeat(2, minmax(220px,1fr))}
+      .two-col{grid-template-columns:1fr}
+      .month-tools{grid-template-columns:1fr 1fr}
+      .glossary{grid-template-columns:1fr}
+    }
+    @media (max-width: 720px){
+      .app{width:min(100% - 18px, 1440px); margin-top:9px}
+      header.hero{padding:22px; border-radius:22px}
+      .first-step{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .month-tools{grid-template-columns:1fr}
+      .scenario-grid{grid-template-columns:1fr}
+      .bar-row{grid-template-columns:78px minmax(0,1fr) 96px}
+    }
+
+
+    /* iPad UX: schede grandi, nessuna finestra interna a scorrimento */
+    body.ipad-ux{
+      background:#edf4ef;
+      -webkit-text-size-adjust:100%;
+    }
+    .shell-ipad{
+      width:min(1180px, calc(100% - 32px));
+      margin:18px auto 38px;
+      padding-bottom:env(safe-area-inset-bottom);
+    }
+    .ipad-hero{
+      padding:26px 28px;
+      border-radius:30px;
+    }
+    .ipad-hero h1{font-size:clamp(34px, 4.6vw, 48px)}
+    .ipad-hero p{font-size:18px; max-width:760px}
+    .ipad-first-step{
+      margin:16px 0;
+      padding:18px 20px;
+      border-radius:24px;
+    }
+    .ipad-steps{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin:16px 0;
+    }
+    .ipad-steps a{
+      min-height:92px;
+      display:grid;
+      grid-template-columns:46px minmax(0, 1fr);
+      align-items:center;
+      gap:12px;
+      padding:14px;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid var(--border);
+      box-shadow:0 10px 28px rgba(15,46,40,.08);
+      color:var(--text);
+      text-decoration:none;
+      touch-action:manipulation;
+    }
+    .ipad-steps a:hover{background:#f6fbf8}
+    .step-num{
+      width:42px!important;
+      height:42px!important;
+      min-width:42px!important;
+      border-radius:999px!important;
+      display:grid!important;
+      place-items:center!important;
+      line-height:1!important;
+      padding:0!important;
+      margin:0!important;
+      overflow:hidden!important;
+      font-size:16px!important;
+      font-weight:950!important;
+      font-variant-numeric:tabular-nums;
+    }
+    .ipad-steps b{display:block; font-size:16px; line-height:1.15; color:var(--text)}
+    .ipad-steps small{display:block; margin-top:4px; color:var(--muted); line-height:1.25; font-size:12.5px}
+    .ipad-overview{
+      display:grid;
+      grid-template-columns:minmax(0, 1.35fr) minmax(280px, .65fr);
+      gap:14px;
+      margin:16px 0;
+    }
+    .ipad-note-card p{margin-bottom:0}
+    .ipad-content{gap:18px}
+    .ipad-panel{
+      padding:22px;
+      border-radius:26px;
+      box-shadow:0 14px 36px rgba(15,46,40,.09);
+      scroll-margin-top:18px;
+    }
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .eyebrow{
+      display:inline-flex;
+      margin-bottom:7px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:#e7f6ed;
+      color:var(--green-dark);
+      font-size:12px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .section-head h2{margin:0; font-size:28px}
+    .form-grid{
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      align-items:stretch;
+    }
+    label.field{
+      min-height:108px;
+      border-radius:20px;
+      padding:14px;
+    }
+    input, select, textarea{
+      min-height:48px;
+      border-radius:16px;
+      font-size:17px;
+    }
+    .cell-input{min-width:0; width:100%; font-size:17px; min-height:46px}
+    .toggle-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .toggle-row{
+      margin:0;
+      min-height:100%;
+      border-radius:20px;
+    }
+    .toggle-row input{width:24px; height:24px; min-height:auto; flex:0 0 auto}
+    .formula-card{
+      background:#f7fffa;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:12px 14px;
+      margin-bottom:14px;
+    }
+    .month-cards{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+    .month-card{
+      border:1px solid var(--border);
+      border-radius:24px;
+      background:linear-gradient(180deg, #fff, #f8fcfa);
+      padding:16px;
+      box-shadow:0 8px 22px rgba(15,46,40,.06);
+    }
+    .month-card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .month-card h3{margin:0; font-size:21px}
+    .month-fields{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    .mini-field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding:10px;
+      border:1px solid #e1ece8;
+      border-radius:17px;
+      background:#fff;
+    }
+    .mini-field span{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+      line-height:1.2;
+    }
+    .month-results{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:8px;
+      margin-top:12px;
+    }
+    .result-chip{
+      border-radius:17px;
+      padding:10px;
+      background:#f4faf7;
+      border:1px solid #e1ece8;
+    }
+    .result-chip span{display:block; color:var(--muted); font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.03em}
+    .result-chip b{display:block; margin-top:3px; color:#061f1a; font-size:17px; font-variant-numeric:tabular-nums}
+    .ipad-month-tools{
+      grid-template-columns:minmax(260px, 1fr) repeat(3, auto);
+      align-items:end;
+      gap:12px;
+    }
+    .month-select-field{min-height:92px}
+    .ipad-planner-layout{
+      display:grid;
+      grid-template-columns:minmax(300px, .42fr) minmax(0,1fr);
+      gap:14px;
+      align-items:start;
+    }
+    .ipad-planner-layout .footer-actions{grid-column:2}
+    .people-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    .person-card{
+      border:1px solid var(--border);
+      border-radius:22px;
+      background:#fff;
+      padding:14px;
+      box-shadow:0 8px 20px rgba(15,46,40,.05);
+    }
+    .person-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .person-head strong{font-size:16px; line-height:1.2}
+    .person-fields{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    .person-result{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-radius:17px;
+      padding:10px 12px;
+      background:#f2faf6;
+      border:1px solid #d9ebe4;
+      font-weight:900;
+    }
+    .person-result b{font-size:20px; font-variant-numeric:tabular-nums}
+    .scenario{border-radius:24px; padding:16px; position:static}
+    .scenario-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+    .metric{border-radius:18px}
+    .kpis{grid-template-columns:repeat(4, minmax(0,1fr))}
+    .kpi{border-radius:20px; min-height:112px}
+    .bar-row{
+      grid-template-columns:110px minmax(0,1fr) 112px;
+      min-height:38px;
+    }
+    .bar-track{height:22px}
+    .bar{top:4px; height:14px}
+    .glossary{grid-template-columns:repeat(2, minmax(0,1fr))}
+    details{border-radius:20px; padding:14px 16px}
+    summary{min-height:32px}
+    body.hr-preview .footer-actions,
+    body.hr-preview button:not(.keep-visible){display:none!important}
+    @media (max-width: 1100px){
+      .shell-ipad{width:min(100% - 24px, 1024px); margin-top:12px}
+      .ipad-steps{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .ipad-overview{grid-template-columns:1fr}
+      .kpis{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .ipad-planner-layout{grid-template-columns:1fr}
+      .ipad-planner-layout .footer-actions{grid-column:auto}
+      .people-grid{grid-template-columns:1fr}
+      .month-cards{grid-template-columns:1fr}
+      .month-results{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .ipad-month-tools{grid-template-columns:1fr}
+      .toggle-grid{grid-template-columns:1fr}
+      .scenario-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+    }
+    @media (max-width: 760px){
+      .shell-ipad{width:min(100% - 16px, 720px); margin-top:8px}
+      .ipad-hero{padding:22px; border-radius:24px}
+      .ipad-hero h1{font-size:32px}
+      .ipad-hero p{font-size:16px}
+      .section-head{display:block}
+      .section-head .required-legend{margin-top:10px}
+      .form-grid,.month-fields,.person-fields,.glossary,.scenario-grid{grid-template-columns:1fr}
+      .ipad-steps{gap:9px}
+      .ipad-steps a{grid-template-columns:42px 1fr; min-height:84px; padding:12px}
+      .step-num{width:38px!important;height:38px!important;min-width:38px!important;font-size:15px!important}
+      .kpis{grid-template-columns:1fr}
+      .bar-row{grid-template-columns:82px minmax(0,1fr) 92px; gap:8px}
+    }
+    @media print{
+      body{background:#fff}
+      .sidebar, .hero-actions, .footer-actions, .btn, button, .first-step .btn-green{display:none!important}
+      .app{width:100%; margin:0}
+      .card, header.hero, .first-step{box-shadow:none}
+      .grid{display:block}
+      header.hero{color:#111; background:#fff; border:1px solid #ddd}
+      .table-wrap{overflow:visible}
+      table{min-width:0; font-size:10px}
+      th, td{padding:6px}
+    }
+  </style>
+</head>
+<body class="hr-preview ipad-ux">
+  <div class="app shell-ipad">
+    <header class="hero ipad-hero">
+      <div class="topline"><span class="wa-dot"></span> Piano ferie · Store Manager</div>
+      <h1>Strumento Piano Ferie per Store Manager</h1>
+      <p>
+        Un percorso guidato in 4 passaggi per leggere le ore del negozio, confrontarle con il budget
+        e capire dove pianificare ferie/ROL senza perdere copertura.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#step1">Inizia dal passaggio 1</a>
+      </div>
+    </header>
+
+    <section class="first-step ipad-first-step">
+      <div>
+        <strong>Da fare per primo</strong>
+        <span>
+          Compila i <b>dati progetto</b>. Poi controlla per ogni mese le <b>ore settimanali incomprimibili</b>
+          e il <b>budget/storico ore</b>: sono i due dati chiave per ottenere un suggerimento utile.
+          I campi obbligatori sono evidenziati con <span class="req">*</span>.
+        </span>
+      </div>
+    </section>
+
+    <nav class="ipad-steps" aria-label="Passaggi dello strumento">
+      <a href="#step1"><span class="step-num">1</span><span><b>Dati progetto</b><small>Negozio, manager, periodo</small></span></a>
+      <a href="#step2"><span class="step-num">2</span><span><b>Dati mensili</b><small>Ore, budget e variabili</small></span></a>
+      <a href="#step3"><span class="step-num">3</span><span><b>Piano persone</b><small>Ferie/ROL per mese</small></span></a>
+      <a href="#step4"><span class="step-num">4</span><span><b>Risultato</b><small>Alert e riepilogo</small></span></a>
+    </nav>
+
+    <section class="ipad-overview">
+      <div class="card" id="quickSummary"></div>
+      <div class="card ipad-note-card">
+        <h3>Come leggerlo</h3>
+        <p class="small">
+          Le informazioni sono organizzate a schede grandi e touch friendly. Per lavorare si segue il flusso dall'alto verso il basso, con dati e risultati sempre visibili nella stessa pagina.
+        </p>
+      </div>
+    </section>
+
+    <main class="content ipad-content">
+      <section class="card ipad-panel" id="step1">
+        <div class="section-head">
+          <div><span class="eyebrow">Passaggio 1</span><h2>Dati progetto</h2></div>
+          <p class="required-legend"><span class="req">*</span> campi obbligatori</p>
+        </div>
+        <div class="form-grid" id="metaForm"></div>
+        <div class="toggle-grid">
+          <label class="toggle-row">
+            <input type="checkbox" id="useTeamDetail" />
+            <span>
+              <b>Calcola le ore settimanali dal dettaglio team</b><br>
+              <span class="small">Se attivo, le ore settimanali incomprimibili sono calcolate dalla scheda persone. Se disattivato, puoi inserirle manualmente nei dati mensili.</span>
+            </span>
+          </label>
+          <label class="toggle-row">
+            <input type="checkbox" id="includeCompensativi" />
+            <span>
+              <b>Sottrai i compensativi dal calcolo delle ore nette</b><br>
+              <span class="small">Nel modello attuale i compensativi sono riportati, ma non sottratti nella formula “ORE TOTALI”. Per questo l'opzione parte disattivata.</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card ipad-panel" id="step2">
+        <div class="section-head">
+          <div><span class="eyebrow">Passaggio 2</span><h2>Dati mensili e calcolo</h2></div>
+        </div>
+        <p class="small formula-card">
+          Formula base: <b>ore mensili lorde = ore settimanali × settimane/fattore</b>.
+          Poi vengono considerate le correzioni come appoggi/corsi, assenteismo previsto e altri eventi.
+        </p>
+        <div id="monthlyTable"></div>
+      </section>
+
+      <section class="card ipad-panel" id="step3">
+        <div class="section-head">
+          <div><span class="eyebrow">Passaggio 3</span><h2>Pianificazione per persona</h2></div>
+        </div>
+        <p class="small">
+          Scegli un mese, controlla le ore settimanali di ogni persona e inserisci quante settimane ferie/ROL vuoi pianificare.
+          Il totale aggiorna automaticamente il mese selezionato.
+        </p>
+        <div class="month-tools ipad-month-tools">
+          <label class="field month-select-field">
+            <span>Mese da lavorare</span>
+            <select id="selectedMonth"></select>
+          </label>
+          <button class="btn-soft" data-action="fillBaseSelected">Usa base sul mese</button>
+          <button class="btn-soft" data-action="copySelectedToAll">Copia mese su tutti</button>
+          <button class="btn-danger" data-action="clearPlanSelected">Svuota ferie mese</button>
+        </div>
+
+        <div class="ipad-planner-layout">
+          <aside class="scenario" id="monthScenario"></aside>
+          <div id="teamPlanner"></div>
+          <div class="footer-actions">
+            <button class="btn-green" data-action="addEmployee">Aggiungi persona</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card ipad-panel" id="step4">
+        <div class="section-head">
+          <div><span class="eyebrow">Passaggio 4</span><h2>Risultato immediato</h2></div>
+        </div>
+        <div class="kpis" id="kpis"></div>
+        <div class="muted-line"></div>
+        <h3>Saldo dopo la pianificazione ferie/ROL</h3>
+        <p class="small">
+          Verde = copertura in equilibrio. Giallo = ore ancora da valutare. Rosso = carenza di copertura dopo le ferie pianificate.
+        </p>
+        <div class="chart" id="chart"></div>
+        <div id="alerts"></div>
+      </section>
+
+      <section class="card ipad-panel">
+        <div class="section-head"><div><span class="eyebrow">Prima di chiudere</span><h2>Controlli utili</h2></div></div>
+        <div id="checks"></div>
+      </section>
+
+      <section class="card ipad-panel">
+        <div class="section-head"><div><span class="eyebrow">Supporto</span><h2>Glossario operativo</h2></div></div>
+        <div class="glossary">
+          <details open>
+            <summary>Ore settimanali incomprimibili <span class="req">*</span></summary>
+            <p>Somma delle basi orarie settimanali presenti in store nel mese. È il punto di partenza del calcolo.</p>
+          </details>
+          <details>
+            <summary>Settimane/fattore mese <span class="req">*</span></summary>
+            <p>Moltiplicatore usato per trasformare le ore settimanali in ore mensili. Nel modello base è impostato a 4,3, ma puoi modificarlo.</p>
+          </details>
+          <details>
+            <summary>Ore mensili lorde</summary>
+            <p>Ore settimanali incomprimibili × settimane/fattore. Indicano la copertura teorica del mese prima delle correzioni.</p>
+          </details>
+          <details>
+            <summary>Compensativi</summary>
+            <p>Ore evidenziate nel file Excel. Nel modello attuale non sono sottratte dalla formula ORE TOTALI; puoi decidere di includerle dal toggle iniziale.</p>
+          </details>
+          <details>
+            <summary>Appoggi/Corsi</summary>
+            <p>Ore non pienamente disponibili per attività ordinaria di negozio perché dedicate ad appoggi, corsi o attività assimilabili.</p>
+          </details>
+          <details>
+            <summary>Assenteismo previsto</summary>
+            <p>Stima percentuale applicata alle ore mensili lorde. Lo strumento la trasforma automaticamente in ore.</p>
+          </details>
+          <details>
+            <summary>Budget/storico ore <span class="req">*</span></summary>
+            <p>Ore obiettivo del mese. Il confronto con le ore nette indica se servono ferie/ROL da scaricare o copertura aggiuntiva.</p>
+          </details>
+          <details>
+            <summary>Ore ferie/ROL consigliate</summary>
+            <p>Se le ore nette sono superiori al budget, il surplus diventa una proposta di ore ferie/ROL da pianificare.</p>
+          </details>
+          <details>
+            <summary>Saldo dopo ferie</summary>
+            <p>Ore nette - ferie/ROL pianificate - budget. Se è negativo, il mese rischia carenza di copertura.</p>
+          </details>
+          <details>
+            <summary>Persone-settimana</summary>
+            <p>Stima pratica: ore ferie consigliate ÷ media ore settimanali delle persone attive nel mese. Aiuta a tradurre le ore in settimane da distribuire.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <input class="file-input" id="jsonFile" type="file" accept="application/json,.json" />
+
+  <script>
+    const MONTHS = ["Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre", "Gennaio+1"];
+    const SAMPLE_STATE = {
+  "meta": {
+    "storeCode": "",
+    "manager": "",
+    "periodo": "Febbraio - Gennaio+1",
+    "note": ""
+  },
+  "useTeamDetail": true,
+  "months": {
+    "Febbraio": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 458.0,
+      "compensativi": 0.0,
+      "appoggiCorsi": 30.0,
+      "assenteismoPct": 4.0,
+      "altriEventi": 0.0,
+      "budget": 1480.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Marzo": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 437.0,
+      "compensativi": 0.0,
+      "appoggiCorsi": 16.0,
+      "assenteismoPct": 2.0,
+      "altriEventi": 0.0,
+      "budget": 1400.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Aprile": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 416.0,
+      "compensativi": 164.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 3.0,
+      "altriEventi": 0.0,
+      "budget": 1400.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Maggio": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 416.0,
+      "compensativi": 88.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 3.0,
+      "altriEventi": 0.0,
+      "budget": 1500.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Giugno": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 426.0,
+      "compensativi": 82.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 1.0,
+      "altriEventi": 0.0,
+      "budget": 1700.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Luglio": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 436.0,
+      "compensativi": 78.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 2.5,
+      "altriEventi": 0.0,
+      "budget": 2100.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Agosto": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 416.0,
+      "compensativi": 92.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 2.5,
+      "altriEventi": 0.0,
+      "budget": 1900.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Settembre": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 426.0,
+      "compensativi": 0.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 1.0,
+      "altriEventi": 0.0,
+      "budget": 2100.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Ottobre": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 416.0,
+      "compensativi": 0.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 2.5,
+      "altriEventi": 0.0,
+      "budget": 1900.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Novembre": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 416.0,
+      "compensativi": 0.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 4.0,
+      "altriEventi": 0.0,
+      "budget": 1900.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Dicembre": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 426.0,
+      "compensativi": 246.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 4.0,
+      "altriEventi": 0.0,
+      "budget": 2100.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    },
+    "Gennaio+1": {
+      "weeksFactor": 4.3,
+      "fixedWeeklyHours": 416.0,
+      "compensativi": 164.0,
+      "appoggiCorsi": 0.0,
+      "assenteismoPct": 2.0,
+      "altriEventi": 0.0,
+      "budget": 1500.0,
+      "plannedFerie": 0.0,
+      "note": ""
+    }
+  },
+  "employees": [
+    {
+      "id": "e1",
+      "name": "Manager 1",
+      "type": "Indeterminato",
+      "role": "Manager",
+      "base": 40.0,
+      "monthHours": {
+        "Febbraio": 40.0,
+        "Marzo": 40.0,
+        "Aprile": 40.0,
+        "Maggio": 40.0,
+        "Giugno": 40.0,
+        "Luglio": 40.0,
+        "Agosto": 40.0,
+        "Settembre": 40.0,
+        "Ottobre": 40.0,
+        "Novembre": 40.0,
+        "Dicembre": 40.0,
+        "Gennaio+1": 40.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e2",
+      "name": "Manager 2",
+      "type": "Indeterminato",
+      "role": "Manager",
+      "base": 40.0,
+      "monthHours": {
+        "Febbraio": 40.0,
+        "Marzo": 40.0,
+        "Aprile": 40.0,
+        "Maggio": 40.0,
+        "Giugno": 40.0,
+        "Luglio": 40.0,
+        "Agosto": 40.0,
+        "Settembre": 40.0,
+        "Ottobre": 40.0,
+        "Novembre": 40.0,
+        "Dicembre": 40.0,
+        "Gennaio+1": 40.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e3",
+      "name": "Manager 3",
+      "type": "Indeterminato",
+      "role": "Manager",
+      "base": 40.0,
+      "monthHours": {
+        "Febbraio": 40.0,
+        "Marzo": 40.0,
+        "Aprile": 40.0,
+        "Maggio": 40.0,
+        "Giugno": 40.0,
+        "Luglio": 40.0,
+        "Agosto": 40.0,
+        "Settembre": 40.0,
+        "Ottobre": 40.0,
+        "Novembre": 40.0,
+        "Dicembre": 40.0,
+        "Gennaio+1": 40.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e4",
+      "name": "Dipendente 1",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 30.0,
+      "monthHours": {
+        "Febbraio": 30.0,
+        "Marzo": 30.0,
+        "Aprile": 30.0,
+        "Maggio": 30.0,
+        "Giugno": 40.0,
+        "Luglio": 40.0,
+        "Agosto": 30.0,
+        "Settembre": 40.0,
+        "Ottobre": 30.0,
+        "Novembre": 30.0,
+        "Dicembre": 40.0,
+        "Gennaio+1": 30.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e5",
+      "name": "Dipendente 2",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 30.0,
+      "monthHours": {
+        "Febbraio": 30.0,
+        "Marzo": 30.0,
+        "Aprile": 30.0,
+        "Maggio": 30.0,
+        "Giugno": 30.0,
+        "Luglio": 40.0,
+        "Agosto": 30.0,
+        "Settembre": 30.0,
+        "Ottobre": 30.0,
+        "Novembre": 30.0,
+        "Dicembre": 30.0,
+        "Gennaio+1": 30.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e6",
+      "name": "Dipendente 3",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 30.0,
+      "monthHours": {
+        "Febbraio": 30.0,
+        "Marzo": 30.0,
+        "Aprile": 30.0,
+        "Maggio": 30.0,
+        "Giugno": 30.0,
+        "Luglio": 30.0,
+        "Agosto": 30.0,
+        "Settembre": 30.0,
+        "Ottobre": 30.0,
+        "Novembre": 30.0,
+        "Dicembre": 30.0,
+        "Gennaio+1": 30.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e7",
+      "name": "Dipendente 4",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 30.0,
+      "monthHours": {
+        "Febbraio": 30.0,
+        "Marzo": 30.0,
+        "Aprile": 30.0,
+        "Maggio": 30.0,
+        "Giugno": 30.0,
+        "Luglio": 30.0,
+        "Agosto": 30.0,
+        "Settembre": 30.0,
+        "Ottobre": 30.0,
+        "Novembre": 30.0,
+        "Dicembre": 30.0,
+        "Gennaio+1": 30.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e8",
+      "name": "Dipendente 5",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 30.0,
+      "monthHours": {
+        "Febbraio": 30.0,
+        "Marzo": 30.0,
+        "Aprile": 30.0,
+        "Maggio": 30.0,
+        "Giugno": 30.0,
+        "Luglio": 30.0,
+        "Agosto": 30.0,
+        "Settembre": 30.0,
+        "Ottobre": 30.0,
+        "Novembre": 30.0,
+        "Dicembre": 30.0,
+        "Gennaio+1": 30.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e9",
+      "name": "Dipendente 6",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 24.0,
+      "monthHours": {
+        "Febbraio": 24.0,
+        "Marzo": 24.0,
+        "Aprile": 24.0,
+        "Maggio": 24.0,
+        "Giugno": 24.0,
+        "Luglio": 24.0,
+        "Agosto": 24.0,
+        "Settembre": 24.0,
+        "Ottobre": 24.0,
+        "Novembre": 24.0,
+        "Dicembre": 24.0,
+        "Gennaio+1": 24.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e10",
+      "name": "Dipendente 7",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 24.0,
+      "monthHours": {
+        "Febbraio": 24.0,
+        "Marzo": 24.0,
+        "Aprile": 24.0,
+        "Maggio": 24.0,
+        "Giugno": 24.0,
+        "Luglio": 24.0,
+        "Agosto": 24.0,
+        "Settembre": 24.0,
+        "Ottobre": 24.0,
+        "Novembre": 24.0,
+        "Dicembre": 24.0,
+        "Gennaio+1": 24.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e11",
+      "name": "Dipendente 8",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 24.0,
+      "monthHours": {
+        "Febbraio": 24.0,
+        "Marzo": 24.0,
+        "Aprile": 24.0,
+        "Maggio": 24.0,
+        "Giugno": 24.0,
+        "Luglio": 24.0,
+        "Agosto": 24.0,
+        "Settembre": 24.0,
+        "Ottobre": 24.0,
+        "Novembre": 24.0,
+        "Dicembre": 24.0,
+        "Gennaio+1": 24.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e12",
+      "name": "Dipendente 9",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 24.0,
+      "monthHours": {
+        "Febbraio": 21.0,
+        "Marzo": 21.0,
+        "Aprile": 21.0,
+        "Maggio": 21.0,
+        "Giugno": 21.0,
+        "Luglio": 21.0,
+        "Agosto": 21.0,
+        "Settembre": 21.0,
+        "Ottobre": 21.0,
+        "Novembre": 21.0,
+        "Dicembre": 21.0,
+        "Gennaio+1": 21.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e13",
+      "name": "Dipendente 10",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 24.0,
+      "monthHours": {
+        "Febbraio": 24.0,
+        "Marzo": 24.0,
+        "Aprile": 24.0,
+        "Maggio": 24.0,
+        "Giugno": 24.0,
+        "Luglio": 24.0,
+        "Agosto": 24.0,
+        "Settembre": 24.0,
+        "Ottobre": 24.0,
+        "Novembre": 24.0,
+        "Dicembre": 24.0,
+        "Gennaio+1": 24.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e14",
+      "name": "Dipendente 11",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 21.0,
+      "monthHours": {
+        "Febbraio": 21.0,
+        "Marzo": 21.0,
+        "Aprile": 21.0,
+        "Maggio": 21.0,
+        "Giugno": 21.0,
+        "Luglio": 21.0,
+        "Agosto": 21.0,
+        "Settembre": 21.0,
+        "Ottobre": 21.0,
+        "Novembre": 21.0,
+        "Dicembre": 21.0,
+        "Gennaio+1": 21.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e15",
+      "name": "Dipendente 12",
+      "type": "Indeterminato",
+      "role": "Vendite",
+      "base": 8.0,
+      "monthHours": {
+        "Febbraio": 8.0,
+        "Marzo": 8.0,
+        "Aprile": 8.0,
+        "Maggio": 8.0,
+        "Giugno": 8.0,
+        "Luglio": 8.0,
+        "Agosto": 8.0,
+        "Settembre": 8.0,
+        "Ottobre": 8.0,
+        "Novembre": 8.0,
+        "Dicembre": 8.0,
+        "Gennaio+1": 8.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e16",
+      "name": "Determinato 1",
+      "type": "Determinato",
+      "role": "Determinato",
+      "base": 21.0,
+      "monthHours": {
+        "Febbraio": 21.0,
+        "Marzo": 21.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    },
+    {
+      "id": "e17",
+      "name": "Determinato 2",
+      "type": "Determinato",
+      "role": "Determinato",
+      "base": 21.0,
+      "monthHours": {
+        "Febbraio": 21.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      },
+      "planWeeks": {
+        "Febbraio": 0.0,
+        "Marzo": 0.0,
+        "Aprile": 0.0,
+        "Maggio": 0.0,
+        "Giugno": 0.0,
+        "Luglio": 0.0,
+        "Agosto": 0.0,
+        "Settembre": 0.0,
+        "Ottobre": 0.0,
+        "Novembre": 0.0,
+        "Dicembre": 0.0,
+        "Gennaio+1": 0.0
+      }
+    }
+  ],
+  "includeCompensativi": false
+};
+    const STORAGE_KEY = "strumento_piano_ferie_store_manager_ipad_v4";
+    // Per l'integrazione futura: incolla qui l'URL del trigger Power Automate solo se il repository/hosting è protetto.
+    // Se il sito è pubblico, non inserire qui un endpoint non autenticato.
+    const POWER_AUTOMATE_FLOW_URL = "";
+    let state = loadInitialState();
+    let selectedMonth = MONTHS[0];
+
+    function loadInitialState(){
+      try{
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if(saved){
+          const parsed = JSON.parse(saved);
+          if(parsed && parsed.months && parsed.employees) return parsed;
+        }
+      }catch(e){}
+      return clone(SAMPLE_STATE);
+    }
+    function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+    function esc(value){
+      return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+    function toNum(value){
+      if(value === null || value === undefined) return 0;
+      if(typeof value === "number") return Number.isFinite(value) ? value : 0;
+      let s = String(value).trim().replace(/\s/g, "");
+      if(!s) return 0;
+      if(s.includes(",") && s.includes(".")){
+        s = s.replace(/\./g, "").replace(",", ".");
+      }else{
+        s = s.replace(",", ".");
+      }
+      const n = parseFloat(s);
+      return Number.isFinite(n) ? n : 0;
+    }
+    function inputValue(n, decimals=1){
+      if(!Number.isFinite(Number(n))) return "";
+      const fixed = Number(n).toFixed(decimals);
+      return fixed.replace(/\.0$/, "");
+    }
+    function fmt(n, decimals=0){
+      const val = Number.isFinite(Number(n)) ? Number(n) : 0;
+      return new Intl.NumberFormat("it-IT", {minimumFractionDigits:decimals, maximumFractionDigits:decimals}).format(val);
+    }
+    function pct(n){ return fmt(n, 1) + "%"; }
+    function saveLocal(silent=false){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if(!silent) toast("Progetto salvato nel browser.");
+      }catch(e){
+        toast("Non riesco a salvare nel browser. Usa il download JSON.");
+      }
+    }
+
+    function weeklyFromTeam(month){
+      return state.employees.reduce((sum, emp) => sum + toNum(emp.monthHours?.[month]), 0);
+    }
+    function activeEmployees(month){
+      return state.employees.filter(emp => toNum(emp.monthHours?.[month]) > 0);
+    }
+    function plannedFromPeople(month){
+      return state.employees.reduce((sum, emp) => {
+        return sum + toNum(emp.monthHours?.[month]) * toNum(emp.planWeeks?.[month]);
+      }, 0);
+    }
+    function syncPlannedFromPeople(month){
+      state.months[month].plannedFerie = plannedFromPeople(month);
+    }
+    function calcMonth(month){
+      const m = state.months[month];
+      const weekly = state.useTeamDetail ? weeklyFromTeam(month) : toNum(m.fixedWeeklyHours);
+      const weeksFactor = toNum(m.weeksFactor);
+      const gross = weekly * weeksFactor;
+      const compensativi = toNum(m.compensativi);
+      const appoggi = toNum(m.appoggiCorsi);
+      const assPct = toNum(m.assenteismoPct);
+      const absence = gross * assPct / 100;
+      const altri = toNum(m.altriEventi);
+      const net = gross - (state.includeCompensativi ? compensativi : 0) - appoggi - absence - altri;
+      const budget = toNum(m.budget);
+      const gapBefore = net - budget;
+      const targetFerie = Math.max(gapBefore, 0);
+      const planned = toNum(m.plannedFerie);
+      const after = net - planned - budget;
+      const active = activeEmployees(month);
+      const avgWeekly = active.length ? active.reduce((s,e)=>s+toNum(e.monthHours?.[month]),0)/active.length : 0;
+      const personWeeks = avgWeekly ? targetFerie / avgWeekly : 0;
+      const targetPerWeek = weeksFactor ? targetFerie / weeksFactor : 0;
+      return {weekly, weeksFactor, gross, compensativi, appoggi, assPct, absence, altri, net, budget, gapBefore, targetFerie, planned, after, avgWeekly, personWeeks, targetPerWeek, activeCount: active.length};
+    }
+    function statusFor(calc){
+      const tol = 20;
+      if(calc.after < -tol) return {type:"danger", text:"Carenza copertura"};
+      if(calc.gapBefore > tol && calc.planned < calc.targetFerie - tol) return {type:"warn", text:"Da scaricare"};
+      if(calc.after > tol && calc.gapBefore > tol) return {type:"warn", text:"Surplus residuo"};
+      return {type:"ok", text:"In equilibrio"};
+    }
+    function recommendation(calc){
+      if(calc.gapBefore > 20){
+        if(calc.planned < calc.targetFerie - 20){
+          return `Pianifica ancora circa ${fmt(calc.targetFerie - calc.planned)} h ferie/ROL.`;
+        }
+        if(calc.after < -20){
+          return `Hai pianificato troppe ferie rispetto al budget: servono circa ${fmt(Math.abs(calc.after))} h di copertura.`;
+        }
+        return "Ferie/ROL coerenti con il budget del mese.";
+      }
+      if(calc.gapBefore < -20){
+        const more = Math.abs(calc.gapBefore) + calc.planned;
+        return `Mese già sotto budget: valuta copertura aggiuntiva per circa ${fmt(more)} h.`;
+      }
+      return "Mese già vicino al budget: pianifica ferie con prudenza.";
+    }
+
+    function render(){
+      renderMeta();
+      renderQuickSummary();
+      renderKpis();
+      renderChart();
+      renderAlerts();
+      renderMonthlyTable();
+      renderSelectedMonthOptions();
+      renderTeamPlanner();
+      renderMonthScenario();
+      renderChecks();
+    }
+
+    function renderMeta(){
+      const meta = state.meta || {};
+      document.getElementById("metaForm").innerHTML = `
+        <label class="field"><span>Codice negozio <span class="req">*</span></span><input data-meta="storeCode" value="${esc(meta.storeCode)}" placeholder="Es. 1234" autocomplete="off"></label>
+        <label class="field"><span>Store Manager <span class="req">*</span></span><input data-meta="manager" value="${esc(meta.manager)}" placeholder="Nome e cognome" autocomplete="name"></label>
+        <label class="field"><span>Periodo commerciale <span class="req">*</span></span><input data-meta="periodo" value="${esc(meta.periodo || "Febbraio - Gennaio+1")}"></label>
+        <label class="field"><span>Note</span><input data-meta="note" value="${esc(meta.note)}" placeholder="Facoltativo · es. bozza v1"></label>
+      `;
+      document.getElementById("useTeamDetail").checked = !!state.useTeamDetail;
+      document.getElementById("includeCompensativi").checked = !!state.includeCompensativi;
+    }
+
+    function allCalcs(){ return MONTHS.map(m => ({month:m, ...calcMonth(m)})); }
+    function renderQuickSummary(){
+      const calcs = allCalcs();
+      const target = calcs.reduce((s,c)=>s+c.targetFerie,0);
+      const planned = calcs.reduce((s,c)=>s+c.planned,0);
+      const deficitAfter = calcs.reduce((s,c)=>s+(c.after < 0 ? Math.abs(c.after) : 0),0);
+      const missing = [];
+      if(!state.meta?.storeCode) missing.push("codice negozio");
+      if(!state.meta?.manager) missing.push("Store Manager");
+      const requiredMissing = missing.length ? `<div class="notice warn" style="margin-top:10px">Manca: <b>${missing.join(", ")}</b><span class="req">*</span>.</div>` : "";
+      document.getElementById("quickSummary").innerHTML = `
+        <h3>Sintesi veloce</h3>
+        <div class="metric"><span>Ferie/ROL consigliate</span><b>${fmt(target)} h</b></div>
+        <div class="metric" style="margin-top:10px"><span>Ferie/ROL pianificate</span><b>${fmt(planned)} h</b></div>
+        <div class="metric" style="margin-top:10px"><span>Carenza residua</span><b class="${deficitAfter>0 ? "danger-text":"ok-text"}">${fmt(deficitAfter)} h</b></div>
+        ${requiredMissing}
+      `;
+    }
+    function renderKpis(){
+      const calcs = allCalcs();
+      const target = calcs.reduce((s,c)=>s+c.targetFerie,0);
+      const planned = calcs.reduce((s,c)=>s+c.planned,0);
+      const monthsToDischarge = calcs.filter(c=>c.targetFerie > 20).length;
+      const deficitMonths = calcs.filter(c=>c.after < -20).length;
+      const surplusResidual = calcs.reduce((s,c)=>s+(c.after > 20 ? c.after : 0),0);
+      document.getElementById("kpis").innerHTML = `
+        <div class="kpi"><div class="label">Mesi da scaricare</div><div class="value">${monthsToDischarge}</div><div class="hint">con ore nette sopra budget</div></div>
+        <div class="kpi"><div class="label">Target ferie/ROL</div><div class="value">${fmt(target)}</div><div class="hint">ore consigliate totali</div></div>
+        <div class="kpi"><div class="label">Pianificate</div><div class="value">${fmt(planned)}</div><div class="hint">${target ? fmt(planned/target*100,0) : "0"}% del target</div></div>
+        <div class="kpi"><div class="label">Mesi in carenza</div><div class="value ${deficitMonths>0 ? "danger-text" : "ok-text"}">${deficitMonths}</div><div class="hint">dopo ferie pianificate</div></div>
+        <div class="kpi"><div class="label">Surplus residuo</div><div class="value ${surplusResidual>0 ? "warn-text" : "ok-text"}">${fmt(surplusResidual)}</div><div class="hint">ore ancora da valutare</div></div>
+        <div class="kpi"><div class="label">Team attivo medio</div><div class="value">${fmt(calcs.reduce((s,c)=>s+c.activeCount,0)/MONTHS.length,1)}</div><div class="hint">persone/mese</div></div>
+        <div class="kpi"><div class="label">Ore sett. medie</div><div class="value">${fmt(calcs.reduce((s,c)=>s+c.weekly,0)/MONTHS.length,0)}</div><div class="hint">base incomprimibile</div></div>
+        <div class="kpi"><div class="label">Budget totale</div><div class="value">${fmt(calcs.reduce((s,c)=>s+c.budget,0))}</div><div class="hint">ore annue inserite</div></div>
+      `;
+    }
+    function renderChart(){
+      const calcs = allCalcs();
+      const maxAbs = Math.max(1, ...calcs.map(c=>Math.abs(c.after)));
+      document.getElementById("chart").innerHTML = calcs.map(c => {
+        const sign = c.after >= 0 ? "pos" : "neg";
+        const width = Math.min(50, Math.abs(c.after) / maxAbs * 49);
+        const left = c.after >= 0 ? 50 : 50 - width;
+        const label = c.after >= 0 ? `+${fmt(c.after)}` : `-${fmt(Math.abs(c.after))}`;
+        return `
+          <div class="bar-row">
+            <b>${esc(c.month)}</b>
+            <div class="bar-track" aria-label="Saldo ${esc(c.month)} ${esc(label)} ore">
+              <div class="bar ${sign}" style="left:${left}%; width:${width}%;"></div>
+            </div>
+            <span class="${c.after < -20 ? "danger-text" : c.after > 20 ? "warn-text" : "ok-text"}">${label} h</span>
+          </div>
+        `;
+      }).join("");
+    }
+    function renderAlerts(){
+      const calcs = allCalcs();
+      const bad = calcs.filter(c=>c.after < -20);
+      const toDischarge = calcs.filter(c=>c.gapBefore > 20 && c.planned < c.targetFerie - 20);
+      let html = "";
+      if(bad.length){
+        html += `<div class="notice danger"><b>Attenzione copertura:</b> ${bad.map(c=>c.month).join(", ")} risultano sotto budget dopo le ferie pianificate.</div>`;
+      }
+      if(toDischarge.length){
+        html += `<div class="notice warn"><b>Ore ancora da scaricare:</b> ${toDischarge.map(c=>`${c.month} ${fmt(c.targetFerie-c.planned)} h`).join(" · ")}.</div>`;
+      }
+      if(!bad.length && !toDischarge.length){
+        html = `<div class="notice ok"><b>Quadro in equilibrio:</b> al momento non emergono mesi con alert rilevanti. Verifica comunque vincoli manager, estate e settimane commerciali sensibili.</div>`;
+      }
+      document.getElementById("alerts").innerHTML = html;
+    }
+    function renderMonthlyTable(){
+      document.getElementById("monthlyTable").innerHTML = `
+        <div class="month-cards">
+          ${MONTHS.map(month => {
+            const m = state.months[month];
+            const c = calcMonth(month);
+            const s = statusFor(c);
+            const readonlyWeekly = state.useTeamDetail ? "readonly aria-readonly='true' title='Calcolato dal dettaglio team'" : "";
+            const saldoClass = c.after < -20 ? "danger-text" : c.after > 20 ? "warn-text" : "ok-text";
+            return `
+              <article class="month-card" aria-label="${esc(month)}">
+                <div class="month-card-head">
+                  <h3>${esc(month)}</h3>
+                  <span class="pill ${s.type}">${s.text}</span>
+                </div>
+                <div class="month-fields">
+                  <label class="mini-field"><span>Settimane/fattore <span class="req">*</span></span><input class="cell-input" data-month="${esc(month)}" data-month-field="weeksFactor" value="${inputValue(m.weeksFactor,2)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Ore sett. incomprimibili <span class="req">*</span></span><input class="cell-input" ${readonlyWeekly} data-month="${esc(month)}" data-month-field="fixedWeeklyHours" value="${inputValue(state.useTeamDetail ? c.weekly : m.fixedWeeklyHours,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Budget/storico ore <span class="req">*</span></span><input class="cell-input" data-month="${esc(month)}" data-month-field="budget" value="${inputValue(m.budget,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Ferie/ROL pianificate</span><input class="cell-input" data-month="${esc(month)}" data-month-field="plannedFerie" value="${inputValue(m.plannedFerie,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Appoggi/Corsi</span><input class="cell-input" data-month="${esc(month)}" data-month-field="appoggiCorsi" value="${inputValue(m.appoggiCorsi,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Assenteismo previsto %</span><input class="cell-input" data-month="${esc(month)}" data-month-field="assenteismoPct" value="${inputValue(m.assenteismoPct,2)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Compensativi</span><input class="cell-input" data-month="${esc(month)}" data-month-field="compensativi" value="${inputValue(m.compensativi,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Altri eventi</span><input class="cell-input" data-month="${esc(month)}" data-month-field="altriEventi" value="${inputValue(m.altriEventi,1)}" inputmode="decimal"></label>
+                </div>
+                <div class="month-results">
+                  <div class="result-chip"><span>Lorde</span><b>${fmt(c.gross)} h</b></div>
+                  <div class="result-chip"><span>Nette</span><b>${fmt(c.net)} h</b></div>
+                  <div class="result-chip"><span>Consigliate</span><b>${fmt(c.targetFerie)} h</b></div>
+                  <div class="result-chip"><span>Saldo</span><b class="${saldoClass}">${c.after >= 0 ? "+" : ""}${fmt(c.after)} h</b></div>
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+    function renderSelectedMonthOptions(){
+      const sel = document.getElementById("selectedMonth");
+      sel.innerHTML = MONTHS.map(m => `<option value="${esc(m)}" ${m===selectedMonth ? "selected":""}>${esc(m)}</option>`).join("");
+    }
+    function renderTeamPlanner(){
+      const month = selectedMonth;
+      document.getElementById("teamPlanner").innerHTML = `
+        <div class="people-grid">
+          ${state.employees.map(emp => {
+            const hours = toNum(emp.monthHours?.[month]);
+            const weeks = toNum(emp.planWeeks?.[month]);
+            const planned = hours * weeks;
+            return `
+              <article class="person-card">
+                <div class="person-head">
+                  <strong>${esc(emp.name || "Persona")}</strong>
+                  <button class="btn-danger btn-mini" data-action="deleteEmployee" data-emp="${esc(emp.id)}">Elimina</button>
+                </div>
+                <div class="person-fields">
+                  <label class="mini-field"><span>Nome <span class="req">*</span></span><input class="cell-input" data-emp="${esc(emp.id)}" data-emp-field="name" value="${esc(emp.name)}"></label>
+                  <label class="mini-field"><span>Contratto</span><select class="cell-input" data-emp="${esc(emp.id)}" data-emp-field="type">${["Indeterminato","Determinato"].map(t=>`<option ${emp.type===t?"selected":""}>${t}</option>`).join("")}</select></label>
+                  <label class="mini-field"><span>Ruolo</span><select class="cell-input" data-emp="${esc(emp.id)}" data-emp-field="role">${["Manager","Vendite","Determinato","Altro"].map(r=>`<option ${emp.role===r?"selected":""}>${r}</option>`).join("")}</select></label>
+                  <label class="mini-field"><span>Base h <span class="req">*</span></span><input class="cell-input" data-emp="${esc(emp.id)}" data-emp-field="base" value="${inputValue(emp.base,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Ore sett. ${esc(month)} <span class="req">*</span></span><input class="cell-input" data-emp="${esc(emp.id)}" data-emp-month="${esc(month)}" value="${inputValue(hours,1)}" inputmode="decimal"></label>
+                  <label class="mini-field"><span>Settimane ferie/ROL</span><input class="cell-input" data-emp="${esc(emp.id)}" data-plan-month="${esc(month)}" value="${inputValue(weeks,1)}" inputmode="decimal"></label>
+                </div>
+                <div class="person-result"><span>Ore pianificate</span><b>${fmt(planned)} h</b></div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+    function renderMonthScenario(){
+      const c = calcMonth(selectedMonth);
+      const s = statusFor(c);
+      const managers = state.employees.filter(e => e.role === "Manager" && toNum(e.planWeeks?.[selectedMonth]) > 0);
+      const managerNotice = managers.length > 1
+        ? `<div class="notice warn"><b>Controllo manager:</b> risultano ferie manager nello stesso mese. Verifica nel calendario che non ci siano sovrapposizioni.</div>`
+        : "";
+      const summerNotice = ["Giugno","Luglio","Agosto","Settembre"].includes(selectedMonth)
+        ? `<div class="notice info"><b>Promemoria estate:</b> nel periodo giugno-settembre ogni dipendente deve avere 2 settimane consecutive. Questa versione controlla il totale mensile, non la consecutività.</div>`
+        : "";
+      document.getElementById("monthScenario").innerHTML = `
+        <h3>${esc(selectedMonth)} · lettura rapida</h3>
+        <div class="scenario-grid">
+          <div class="metric"><span>Ore settimanali</span><b>${fmt(c.weekly)}</b></div>
+          <div class="metric"><span>Ore nette prima ferie</span><b>${fmt(c.net)}</b></div>
+          <div class="metric"><span>Budget/storico</span><b>${fmt(c.budget)}</b></div>
+          <div class="metric"><span>Ferie/ROL consigliate</span><b>${fmt(c.targetFerie)} h</b></div>
+          <div class="metric"><span>Target a settimana</span><b>${fmt(c.targetPerWeek)} h</b></div>
+          <div class="metric"><span>Persone-settimana stimate</span><b>${fmt(c.personWeeks,1)}</b></div>
+          <div class="metric"><span>Ferie/ROL pianificate</span><b>${fmt(c.planned)} h</b></div>
+          <div class="metric"><span>Saldo dopo ferie</span><b class="${c.after < -20 ? "danger-text" : c.after > 20 ? "warn-text" : "ok-text"}">${c.after >= 0 ? "+" : ""}${fmt(c.after)} h</b></div>
+        </div>
+        <div class="notice ${s.type}">
+          <b>${s.text}:</b> ${esc(recommendation(c))}
+        </div>
+        ${managerNotice}
+        ${summerNotice}
+      `;
+    }
+    function renderChecks(){
+      const calcs = allCalcs();
+      const managerMonths = MONTHS.filter(month => state.employees.filter(e => e.role === "Manager" && toNum(e.planWeeks?.[month]) > 0).length > 1);
+      const summerMonths = ["Giugno","Luglio","Agosto","Settembre"];
+      const summerActive = state.employees.filter(e => summerMonths.some(m => toNum(e.monthHours?.[m]) > 0));
+      const summerOk = summerActive.filter(e => summerMonths.reduce((s,m)=>s+toNum(e.planWeeks?.[m]),0) >= 2).length;
+      const deficit = calcs.filter(c=>c.after < -20);
+      const over = calcs.filter(c=>c.after > 20 && c.gapBefore > 20);
+      const checks = [
+        {
+          type: managerMonths.length ? "warn":"ok",
+          title: "Sovrapposizione manager",
+          text: managerMonths.length ? `Verifica nel calendario: ${managerMonths.join(", ")} hanno più manager con ferie nello stesso mese.` : "Non emergono mesi con più manager pianificati nello stesso mese."
+        },
+        {
+          type: summerOk === summerActive.length && summerActive.length ? "ok":"warn",
+          title: "Due settimane estate",
+          text: `${summerOk}/${summerActive.length} persone attive hanno almeno 2 settimane pianificate tra giugno e settembre. La consecutività va verificata nel piano ufficiale.`
+        },
+        {
+          type: deficit.length ? "danger":"ok",
+          title: "Copertura dopo ferie",
+          text: deficit.length ? `Mesi sotto budget: ${deficit.map(c=>`${c.month} ${fmt(c.after)} h`).join(" · ")}.` : "Nessun mese risulta sotto budget oltre la soglia di 20 h."
+        },
+        {
+          type: over.length ? "warn":"ok",
+          title: "Surplus residuo",
+          text: over.length ? `Mesi con ore ancora da valutare: ${over.map(c=>`${c.month} +${fmt(c.after)} h`).join(" · ")}.` : "Non emergono surplus residui rilevanti."
+        }
+      ];
+      document.getElementById("checks").innerHTML = checks.map(c => `
+        <div class="notice ${c.type}"><b>${esc(c.title)}:</b> ${esc(c.text)}</div>
+      `).join("");
+    }
+
+    function updateMeta(key, value){
+      state.meta = state.meta || {};
+      state.meta[key] = value;
+    }
+    function updateMonth(month, field, value){
+      if(!state.months[month]) return;
+      state.months[month][field] = toNum(value);
+    }
+    function findEmp(id){ return state.employees.find(e => e.id === id); }
+    function updateEmployee(id, field, value){
+      const emp = findEmp(id);
+      if(!emp) return;
+      if(field === "base"){
+        emp.base = toNum(value);
+      }else{
+        emp[field] = value;
+      }
+    }
+    function updateEmployeeMonth(id, month, value){
+      const emp = findEmp(id);
+      if(!emp) return;
+      emp.monthHours = emp.monthHours || {};
+      emp.monthHours[month] = toNum(value);
+    }
+    function updateEmployeePlan(id, month, value){
+      const emp = findEmp(id);
+      if(!emp) return;
+      emp.planWeeks = emp.planWeeks || {};
+      emp.planWeeks[month] = Math.max(0, toNum(value));
+      syncPlannedFromPeople(month);
+    }
+
+    document.addEventListener("change", (ev) => {
+      const el = ev.target;
+      if(el.matches("[data-meta]")){
+        updateMeta(el.dataset.meta, el.value);
+      }
+      if(el.id === "useTeamDetail"){
+        state.useTeamDetail = el.checked;
+      }
+      if(el.id === "includeCompensativi"){
+        state.includeCompensativi = el.checked;
+      }
+      if(el.matches("[data-month-field]")){
+        updateMonth(el.dataset.month, el.dataset.monthField, el.value);
+      }
+      if(el.matches("[data-emp-field]")){
+        updateEmployee(el.dataset.emp, el.dataset.empField, el.value);
+      }
+      if(el.matches("[data-emp-month]")){
+        updateEmployeeMonth(el.dataset.emp, el.dataset.empMonth, el.value);
+        syncPlannedFromPeople(el.dataset.empMonth);
+      }
+      if(el.matches("[data-plan-month]")){
+        updateEmployeePlan(el.dataset.emp, el.dataset.planMonth, el.value);
+      }
+      if(el.id === "selectedMonth"){
+        selectedMonth = el.value;
+      }
+      saveLocal(true);
+      render();
+    });
+
+    document.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("[data-action]");
+      if(!btn) return;
+      const action = btn.dataset.action;
+      if(action === "saveLocal") saveLocal(false);
+      if(action === "resetSample") resetSample();
+      if(action === "exportCsv") exportCsv();
+      if(action === "exportJson") exportJson();
+      if(action === "sendToPowerAutomate") sendToPowerAutomate();
+      if(action === "loadJsonClick") document.getElementById("jsonFile").click();
+      if(action === "copySummary") copySummary();
+      if(action === "print") window.print();
+      if(action === "addEmployee") addEmployee();
+      if(action === "deleteEmployee") deleteEmployee(btn.dataset.emp);
+      if(action === "fillBaseSelected") fillBaseSelected();
+      if(action === "copySelectedToAll") copySelectedToAll();
+      if(action === "clearPlanSelected") clearPlanSelected();
+    });
+
+    document.getElementById("jsonFile")?.addEventListener("change", (ev) => {
+      const file = ev.target.files?.[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const parsed = JSON.parse(reader.result);
+          if(!parsed.months || !parsed.employees) throw new Error("Formato non valido");
+          state = parsed;
+          selectedMonth = MONTHS.find(m => state.months[m]) || MONTHS[0];
+          saveLocal(true);
+          render();
+          toast("Progetto JSON caricato.");
+        }catch(e){
+          toast("File JSON non valido.");
+        }
+      };
+      reader.readAsText(file);
+      ev.target.value = "";
+    });
+
+    function addEmployee(){
+      const id = "e" + Date.now();
+      const monthHours = {};
+      const planWeeks = {};
+      MONTHS.forEach(m => { monthHours[m] = 0; planWeeks[m] = 0; });
+      state.employees.push({
+        id, name:"Nuova persona", type:"Indeterminato", role:"Vendite", base:0, monthHours, planWeeks
+      });
+      saveLocal(true);
+      render();
+      toast("Persona aggiunta. Compila nome e ore.");
+    }
+    function deleteEmployee(id){
+      const emp = findEmp(id);
+      if(!emp) return;
+      const ok = confirm(`Eliminare ${emp.name}?`);
+      if(!ok) return;
+      state.employees = state.employees.filter(e => e.id !== id);
+      MONTHS.forEach(syncPlannedFromPeople);
+      saveLocal(true);
+      render();
+      toast("Persona eliminata.");
+    }
+    function fillBaseSelected(){
+      state.employees.forEach(emp => { emp.monthHours[selectedMonth] = toNum(emp.base); });
+      syncPlannedFromPeople(selectedMonth);
+      saveLocal(true);
+      render();
+      toast(`Per ${selectedMonth} ho applicato la base oraria a tutte le persone.`);
+    }
+    function copySelectedToAll(){
+      const ok = confirm(`Copiare le ore settimanali di ${selectedMonth} su tutti i mesi?`);
+      if(!ok) return;
+      state.employees.forEach(emp => {
+        const h = toNum(emp.monthHours?.[selectedMonth]);
+        MONTHS.forEach(m => { emp.monthHours[m] = h; });
+      });
+      MONTHS.forEach(syncPlannedFromPeople);
+      saveLocal(true);
+      render();
+      toast("Ore del mese copiate su tutti i mesi.");
+    }
+    function clearPlanSelected(){
+      state.employees.forEach(emp => { emp.planWeeks[selectedMonth] = 0; });
+      state.months[selectedMonth].plannedFerie = 0;
+      saveLocal(true);
+      render();
+      toast(`Ferie/ROL svuotate per ${selectedMonth}.`);
+    }
+    function resetSample(){
+      const ok = confirm("Ripristinare i dati dell'esempio Excel? Le modifiche locali verranno perse.");
+      if(!ok) return;
+      state = clone(SAMPLE_STATE);
+      selectedMonth = MONTHS[0];
+      saveLocal(true);
+      render();
+      toast("Dati di esempio ripristinati.");
+    }
+
+    function csvEscape(value){
+      const s = String(value ?? "");
+      return `"${s.replaceAll('"','""')}"`;
+    }
+    function exportCsv(){
+      const rows = [[
+        "mese","ore_settimanali","fattore_settimane","ore_mensili_lorde","compensativi","appoggi_corsi","assenteismo_pct","assenteismo_h","altri_eventi","ore_nette","budget","ferie_rol_consigliate","ferie_rol_pianificate","saldo_dopo_ferie","esito","raccomandazione"
+      ]];
+      MONTHS.forEach(month => {
+        const c = calcMonth(month);
+        const s = statusFor(c);
+        rows.push([
+          month, c.weekly, c.weeksFactor, c.gross, c.compensativi, c.appoggi, c.assPct, c.absence, c.altri, c.net, c.budget, c.targetFerie, c.planned, c.after, s.text, recommendation(c)
+        ]);
+      });
+      const csv = rows.map(r => r.map(csvEscape).join(";")).join("\n");
+      downloadFile(csv, fileBaseName() + "_riepilogo.csv", "text/csv;charset=utf-8");
+      toast("CSV scaricato.");
+    }
+    function exportJson(){
+      const payload = JSON.stringify(state, null, 2);
+      downloadFile(payload, fileBaseName() + "_progetto.json", "application/json;charset=utf-8");
+      toast("JSON progetto scaricato.");
+    }
+    function buildSubmissionPayload(){
+      const calcs = allCalcs();
+      const submittedAt = new Date().toISOString();
+      const safeStore = (state.meta?.storeCode || "negozio").toString().replace(/[^a-zA-Z0-9_-]+/g, "_");
+      const submissionId = `${safeStore}_${Date.now()}`;
+      const target = calcs.reduce((s,c)=>s+c.targetFerie,0);
+      const planned = calcs.reduce((s,c)=>s+c.planned,0);
+      const deficitAfter = calcs.reduce((s,c)=>s+(c.after < 0 ? Math.abs(c.after) : 0),0);
+      return {
+        submission_id: submissionId,
+        submitted_at: submittedAt,
+        tool_id: "strumento_piano_ferie_store_manager",
+        tool_version: "2.0",
+        store_code: state.meta?.storeCode || "",
+        store_manager: state.meta?.manager || "",
+        periodo: state.meta?.periodo || "",
+        note: state.meta?.note || "",
+        use_team_detail: !!state.useTeamDetail,
+        include_compensativi: !!state.includeCompensativi,
+        totals: {
+          ferie_rol_consigliate: target,
+          ferie_rol_pianificate: planned,
+          carenza_residua: deficitAfter,
+          budget_totale: calcs.reduce((s,c)=>s+c.budget,0)
+        },
+        months: calcs.map(c => ({
+          submission_id: submissionId,
+          store_code: state.meta?.storeCode || "",
+          store_manager: state.meta?.manager || "",
+          periodo: state.meta?.periodo || "",
+          mese: c.month,
+          ore_settimanali: c.weekly,
+          fattore_settimane: c.weeksFactor,
+          ore_mensili_lorde: c.gross,
+          compensativi: c.compensativi,
+          appoggi_corsi: c.appoggi,
+          assenteismo_pct: c.assPct,
+          assenteismo_h: c.absence,
+          altri_eventi: c.altri,
+          ore_nette: c.net,
+          budget: c.budget,
+          ferie_rol_consigliate: c.targetFerie,
+          ferie_rol_pianificate: c.planned,
+          saldo_dopo_ferie: c.after,
+          esito: statusFor(c).text,
+          raccomandazione: recommendation(c)
+        })),
+        employees: state.employees.map(e => ({
+          submission_id: submissionId,
+          store_code: state.meta?.storeCode || "",
+          store_manager: state.meta?.manager || "",
+          periodo: state.meta?.periodo || "",
+          id: e.id,
+          nome: e.name,
+          contratto: e.type,
+          ruolo: e.role,
+          base_h: toNum(e.base),
+          ore_mese_json: e.monthHours || {},
+          settimane_ferie_rol_json: e.planWeeks || {}
+        }))
+      };
+    }
+    async function sendToPowerAutomate(){
+      const payload = buildSubmissionPayload();
+      if(!POWER_AUTOMATE_FLOW_URL){
+        downloadFile(JSON.stringify(payload, null, 2), fileBaseName() + "_payload_power_automate.json", "application/json;charset=utf-8");
+        toast("Endpoint Power Automate non configurato: ho scaricato il payload JSON di test.");
+        return;
+      }
+      try{
+        const res = await fetch(POWER_AUTOMATE_FLOW_URL, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        toast("Dati inviati a Power Automate.");
+      }catch(e){
+        console.error(e);
+        downloadFile(JSON.stringify(payload, null, 2), fileBaseName() + "_payload_non_inviato.json", "application/json;charset=utf-8");
+        toast("Invio non riuscito: ho scaricato il payload JSON per controllo.");
+      }
+    }
+    function fileBaseName(){
+      const code = (state.meta?.storeCode || "negozio").replace(/[^a-zA-Z0-9_-]+/g, "_");
+      return `piano_ferie_${code}`;
+    }
+    function downloadFile(content, filename, type){
+      const blob = new Blob([content], {type});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+    async function copySummary(){
+      const calcs = allCalcs();
+      const lines = [
+        `Strumento Piano Ferie · ${state.meta?.storeCode ? "Negozio " + state.meta.storeCode : "Negozio non indicato"}`,
+        `Periodo: ${state.meta?.periodo || ""}`,
+        "",
+        "Riepilogo mesi:"
+      ];
+      calcs.forEach(c => {
+        lines.push(`${c.month}: target ferie/ROL ${fmt(c.targetFerie)} h · pianificate ${fmt(c.planned)} h · saldo dopo ferie ${c.after >= 0 ? "+" : ""}${fmt(c.after)} h · ${statusFor(c).text}`);
+      });
+      lines.push("");
+      lines.push("Alert principali:");
+      const deficit = calcs.filter(c=>c.after < -20);
+      const toDischarge = calcs.filter(c=>c.gapBefore > 20 && c.planned < c.targetFerie - 20);
+      lines.push(deficit.length ? `Mesi sotto budget: ${deficit.map(c=>c.month).join(", ")}` : "Nessun mese sotto budget oltre soglia.");
+      lines.push(toDischarge.length ? `Mesi con ore da scaricare: ${toDischarge.map(c=>c.month).join(", ")}` : "Nessun mese con surplus ferie/ROL rilevante.");
+      try{
+        await navigator.clipboard.writeText(lines.join("\n"));
+        toast("Sintesi copiata negli appunti.");
+      }catch(e){
+        toast("Non riesco a copiare automaticamente. Usa il CSV.");
+      }
+    }
+    function toast(msg){
+      const box = document.getElementById("toast");
+      box.textContent = msg;
+      box.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(()=>box.classList.remove("show"), 2600);
+    }
+
+    render();
+  </script>
+</body>
+</html>
